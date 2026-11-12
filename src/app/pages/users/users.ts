@@ -1,3 +1,4 @@
+import { adminFetch } from '../../services/admin-fetch';
 import { Component, signal, OnInit } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TagModule } from 'primeng/tag';
@@ -72,7 +73,7 @@ export class Users implements OnInit {
         limit: String(this.pageSize()),
         ...this.filters,
       });
-      const res = await fetch('/api/admin/users?' + params, { cache: 'no-store' });
+      const res = await adminFetch('/admin/users?' + params, { cache: 'no-store' });
       if (!res.ok) throw Error();
       const data = await res.json();
       if (request !== this.request) return;
@@ -122,7 +123,7 @@ export class Users implements OnInit {
     this.saving.set(true);
     this.formError.set('');
     try {
-      const res = await fetch('/api/admin/users/' + id, {
+      const res = await adminFetch('/admin/users/' + id, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: body ? JSON.stringify(body) : undefined,

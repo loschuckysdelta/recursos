@@ -1,3 +1,4 @@
+import { adminFetch } from '../../services/admin-fetch';
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -47,7 +48,7 @@ export class Products {
     (this.state() === null || row.active === this.state()) &&
     [row.name,row.badge].join(' ').toLocaleLowerCase().includes(this.query().trim().toLocaleLowerCase())
   ));
-  private api = '/api/admin/products';
+  private api = '/admin/products';
 
   constructor() { void this.load(); }
 
@@ -56,7 +57,7 @@ export class Products {
     this.loading.set(true);
     this.error.set('');
     try {
-      const res = await fetch(this.api, {cache:'no-store'});
+      const res = await adminFetch(this.api, {cache:'no-store'});
       if (!res.ok) throw Error('No se pudieron cargar los productos.');
       this.rows.set(await res.json());
     } catch (error) {
@@ -77,7 +78,7 @@ export class Products {
     this.saving.set(true);
     this.error.set('');
     try {
-      const res = await fetch(this.api + (this.draft._id ? '/' + this.draft._id : ''), {
+      const res = await adminFetch(this.api + (this.draft._id ? '/' + this.draft._id : ''), {
         method:this.deleting ? 'DELETE' : this.draft._id ? 'PUT' : 'POST',
         headers:{'Content-Type':'application/json'},
         body:this.deleting ? undefined : JSON.stringify(this.draft)
