@@ -37,6 +37,7 @@ type CollectionFormValue = {
   selector: 'app-collection',
   imports: [CommonModule, PrimeNGModule],
   templateUrl: './collection.html',
+  styleUrl: './collection.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DialogService],
 })
@@ -357,16 +358,16 @@ export class Collection implements OnInit {
     });
   }
 
-  onSlugInput() {
+  onSlugInput(finalize = false) {
     const control = this.Form.controls.slug;
     let value = control.value || '';
 
-    value = value
-      .toLowerCase()
-      .replace(/[^a-z0-9-_]/g, '')
-      .replace(/[-_]{2,}/g, (m) => m[0])
-      .replace(/^[-_]+/, '')
-      .replace(/[-_]+$/, '');
+    value = value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+    if (finalize) {
+      value = value
+        .replace(/[-_]{2,}/g, (match) => match[0])
+        .replace(/^[-_]+|[-_]+$/g, '');
+    }
 
     control.setValue(value, { emitEvent: false });
   }

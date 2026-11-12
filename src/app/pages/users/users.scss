@@ -1,0 +1,19 @@
+@use '../admin-page.scss';
+
+.user-form { display: grid; gap: 1rem; }
+.user-form label, .user-field { display: grid; gap: 0.4rem; }
+.user-active { display: flex; align-items: center; gap: 0.6rem; }
+.user-active label { display: block; margin: 0; }
+
+.user-avatar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.user-avatar img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}

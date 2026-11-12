@@ -9,6 +9,7 @@ import { SwalService } from '../../services/swal.service';
   selector: 'app-category',
   imports: [CommonModule, PrimeNGModule],
   templateUrl: './category.html',
+  styleUrl: './category.scss',
 })
 export class Category {
   private service = inject(CategoryService);

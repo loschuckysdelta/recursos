@@ -1,0 +1,99 @@
+<div class="toolbar" style="height: 36px;">
+  <h2>Usuarios</h2>
+</div>
+
+<div class="filters">
+  <input pInputText name="query" [(ngModel)]="query" placeholder="Buscar por nombre o correo"
+    aria-label="Buscar por nombre o correo" />
+  <p-select name="state" [(ngModel)]="state" [options]="states" optionLabel="label" optionValue="value"
+    ariaLabel="Estado" />
+  <button pButton label="Buscar" icon="pi pi-search" severity="secondary" (click)="search()" [disabled]="loading()">
+  </button>
+</div>
+
+@if (loading()) {
+<div class="loading" role="status">
+  <p-progress-spinner ariaLabel="Cargando usuarios" />
+  <p>Cargando...</p>
+</div>
+} @else {
+<p role="status" style="margin:0 0 8px;">{{ status() }}</p>
+<p-table [value]="users()" [lazy]="true" [lazyLoadOnInit]="false"
+  (onLazyLoad)="paginate($event.first ?? 0, $event.rows ?? pageSize())" [paginator]="true" [rows]="pageSize()"
+  [rowsPerPageOptions]="[10,25,50,100]" [totalRecords]="total()" [first]="first()" [rowHover]="true" [scrollable]="true"
+  size="small" [showCurrentPageReport]="true" currentPageReportTemplate="{first} a {last} de {totalRecords} usuarios"
+  [tableStyle]="{'min-width':'65rem'}">
+  <ng-template #header>
+    <tr>
+      <th>#</th>
+      <th>Acciones</th>
+      <th>Usuario</th>
+      <th>Correo</th>
+      <th>Género</th>
+      <th>Estado</th>
+      <th>Registro</th>
+      <th>Último ingreso</th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-user let-i="rowIndex">
+    <tr>
+      <td>{{ i + 1 }}</td>
+      <td>
+        <div class="actions">
+          <p-button icon="pi pi-pencil" ariaLabel="Editar usuario" size="small" [disabled]="saving()"
+            (onClick)="edit(user)" />
+          <p-button icon="pi pi-trash" ariaLabel="Eliminar usuario" severity="danger" size="small" [disabled]="saving()"
+            (onClick)="deleting = user" />
+        </div>
+      </td>
+      <td>
+        <div class="user-avatar">
+          <img *ngIf="user.picture" [src]="user.picture" alt="" referrerpolicy="no-referrer" />
+          <span>{{ user.name }}</span>
+        </div>
+      </td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.gender || '—' }}</td>
+      <td>{{ user.birthDate || '—' }}</td>
+      <td>
+        <p-tag [value]="user.active === false ? 'Desactivado' : 'Activo'"
+          [severity]="user.active === false ? 'secondary' : 'success'" />
+      </td>
+      <td>{{ user.createdAt | date:'dd/MM/yy HH:mm' }}</td>
+      <td>{{ user.lastLoginAt | date:'dd/MM/yy HH:mm' }}</td>
+    </tr>
+  </ng-template>
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="9" class="empty">Todavía no hay usuarios registrados.</td>
+    </tr>
+  </ng-template>
+</p-table>
+}
+
+<p-dialog header="Editar usuario" [(visible)]="modal" [modal]="true" [style]="{width:'30rem'}" [closable]="!saving()">
+  <form *ngIf="draft" (ngSubmit)="save()" class="user-form">
+    <label>Nombre<input pInputText name="name" [(ngModel)]="draft.name" required maxlength="100" /></label>
+    <label>Correo<input pInputText [value]="draft.email" readonly /></label>
+    <div class="user-field">
+      <label for="user-gender">Género</label>
+      <p-select inputId="user-gender" name="gender" [options]="genders" [(ngModel)]="draft.gender"
+        placeholder="Seleccionar" [showClear]="true" styleClass="w-full" appendTo="body" />
+    </div>
+    <div class="user-active">
+      <p-checkbox inputId="user-active" name="active" [(ngModel)]="draft.active" [binary]="true" />
+      <label for="user-active">Usuario activo</label>
+    </div>
+    @if (formError()) {<p role="alert">{{ formError() }}</p>}
+    <button pButton type="submit" label="Guardar" icon="pi pi-save" class="w-full" [loading]="saving()"
+      [disabled]="saving()"></button>
+  </form>
+</p-dialog>
+
+<p-dialog header="Eliminar usuario" [visible]="!!deleting" (visibleChange)="deleting = null" [modal]="true"
+  [closable]="!saving()">
+  <p>¿Eliminar a {{ deleting?.name }} y cerrar sus sesiones?</p>
+  <p>Si vuelve a iniciar sesión con Google, se creará un registro nuevo.</p>
+  @if (formError()) {<p role="alert">{{ formError() }}</p>}
+  <p-button label="Eliminar" severity="danger" [loading]="saving()" (onClick)="remove()" />
+</p-dialog>

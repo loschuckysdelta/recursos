@@ -1,0 +1,7 @@
+@use '../admin-page.scss';
+
+.url-bar {
+  margin-bottom: 16px;
+  p-inputgroup { display: flex; }
+  input { flex: 1; min-width: 0; font-size: 0.8rem; color: var(--p-text-muted-color); }
+}

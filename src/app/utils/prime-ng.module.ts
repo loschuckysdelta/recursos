@@ -11,6 +11,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
 import { SelectModule } from 'primeng/select';
+import { TagModule } from 'primeng/tag';
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -28,6 +29,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     InputTextModule,
     InputNumberModule,
     SelectModule,
+    TagModule,
     KeyFilterModule,
     ProgressSpinnerModule,
     InputGroupModule,
